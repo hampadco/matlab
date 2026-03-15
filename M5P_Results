@@ -1,0 +1,111 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.trees.M5P -M 2.0 -batch-size 10
+Relation:     date (2)
+Instances:    828
+Attributes:   8
+              Z
+              N60
+              F
+              Si
+              Si1
+              Mw
+              a
+              L
+Test mode:    split 70.0% train, remainder test
+
+=== Classifier model (full training set) ===
+
+M5 pruned model tree:
+(using smoothed linear models)
+
+N60 <= 22.2 : 
+|   F <= 93.5 : 
+|   |   a <= 0.195 : LM1 (147/77.474%)
+|   |   a >  0.195 : LM2 (332/76.782%)
+|   F >  93.5 : LM3 (183/79.142%)
+N60 >  22.2 : 
+|   N60 <= 28.5 : 
+|   |   a <= 0.335 : LM4 (19/0%)
+|   |   a >  0.335 : LM5 (47/80.531%)
+|   N60 >  28.5 : LM6 (100/0%)
+
+LM num: 1
+L = 
+	0.0454 * Z 
+	- 0.0485 * N60 
+	- 0.0054 * F 
+	+ 0.0001 * Si 
+	- 0.0061 * Si1 
+	+ 0.1989 * Mw 
+	+ 3.3177 * a 
+	- 0.7808
+
+LM num: 2
+L = 
+	0.1113 * Z 
+	- 0.0009 * N60 
+	- 0.0034 * F 
+	- 0.0015 * Si 
+	- 0.0078 * Si1 
+	+ 0.0154 * Mw 
+	+ 0.0821 * a 
+	+ 0.8566
+
+LM num: 3
+L = 
+	0.11 * Z 
+	+ 0.0159 * N60 
+	- 0.026 * F 
+	- 0.006 * Si 
+	- 0.0003 * Si1 
+	- 0.8654 * Mw 
+	+ 0.0831 * a 
+	+ 9.1015
+
+LM num: 4
+L = 
+	0.0155 * Z 
+	- 0.0372 * N60 
+	- 0.0014 * F 
+	- 0.0019 * Si1 
+	+ 0.0121 * Mw 
+	+ 0.4486 * a 
+	+ 0.8801
+
+LM num: 5
+L = 
+	0.0519 * Z 
+	- 0.0889 * N60 
+	- 0.004 * F 
+	- 0.0052 * Si1 
+	+ 0.0121 * Mw 
+	+ 0.3046 * a 
+	+ 2.5239
+
+LM num: 6
+L = 
+	-0.0028 * N60 
+	- 0.0004 * F 
+	- 0.0001 * Si1 
+	+ 0.0121 * Mw 
+	+ 0.1108 * a 
+	+ 0.009
+
+Number of Rules : 6
+
+Time taken to build model: 0.05 seconds
+
+=== Evaluation on test split ===
+
+Time taken to test model on test split: 0 seconds
+
+=== Summary ===
+
+Correlation coefficient                  0.7402
+Mean absolute error                      0.2643
+Root mean squared error                  0.3388
+Relative absolute error                 53.3422 %
+Root relative squared error             67.8517 %
+Total Number of Instances              248     
+

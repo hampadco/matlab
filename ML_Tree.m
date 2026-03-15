@@ -1,0 +1,62 @@
+%%
+function [Answer_Train,Answer_Test,Answer2] = ModelTree(Data)
+%%
+Data = table2array(readtable("data2.csv"));
+%%
+Target=Data(:,end);
+Input=[Data(:,1:end-1)];    
+%% create data
+NTrain=ceil(0.7*numel(Target));
+Input_Train=Input(1:NTrain,:);
+Input_Test=Input(NTrain+1:end,:);
+Target_Train=Target(1:NTrain,1);
+Target_Test=Target(NTrain+1:end,1);
+%% train and test
+tic
+tree = fitrtree(Input_Train,Target_Train,'OptimizeHyperparameters','auto');
+CTime = toc;
+Score_Train = predict(tree,Input_Train);
+Score_Test = predict(tree,Input_Test);
+
+Y_Train(Score_Train>=0.5) = 1;
+Y_Train(Score_Train<0.5) = 0;
+Y_test(Score_Test>=0.5) = 1;
+Y_test(Score_Test<0.5) = 0; 
+
+[confMat, order] = confusionmat(Target_Train, Y_Train);
+TP_Train = confMat(2,2);
+FP_Train = confMat(1,2);
+TN_Train = confMat(1,1);
+FN_Train = confMat(2,1);
+Answer_Train = [TP_Train,FP_Train;TN_Train,FN_Train];
+precision_train = TP_Train / (TP_Train + FP_Train);
+OA_train = (TP_Train+TN_Train) / (TP_Train + TN_Train + FP_Train + FN_Train);
+F1_Score_train = (2*TP_Train) / (2*TP_Train + FP_Train + FN_Train);
+Recall_Train = TP_Train / (TP_Train + FN_Train);
+MCC_Train = (TP_Train*TN_Train - FN_Train*FP_Train) / sqrt((TP_Train + FN_Train)*(TN_Train+FP_Train)*(TP_Train+FP_Train)*(TN_Train+FN_Train));
+[confMat, order] = confusionmat(Target_Test, Y_test);
+TP_Test = confMat(2,2);
+FP_Test = confMat(1,2);
+TN_Test = confMat(1,1);
+FN_Test = confMat(2,1);
+Answer_Test = [TP_Test,FP_Test;TN_Test,FN_Test];
+precision_test = TP_Test / (TP_Test + FP_Test);
+OA_test = (TP_Test+TN_Test) / (TP_Test + TN_Test + FP_Test + FN_Test);
+F1_Score_test = (2*TP_Test) / (2*TP_Test + FP_Test + FN_Test);
+Recall_Test = TP_Test / (TP_Test + FN_Test);
+MCC_Test = (TP_Test*TN_Test - FN_Test*FP_Test) / sqrt((TP_Test + FN_Test)*(TN_Test+FP_Test)*(TP_Test+FP_Test)*(TN_Test+FN_Test));
+%% Plot ROC
+[X,Y,T,AUC_Train] = perfcurve(Target_Train, Score_Train, 1);  % '1' is the positive class
+[X,Y,T,AUC_Test] = perfcurve(Target_Test, Score_Test, 1);  % '1' is the positive class
+save('Tree_results.mat')
+figure;
+plot(X, Y, 'b-', 'LineWidth', 2);
+hold on;
+plot([0 1], [0 1], 'k--'); % reference line
+xlabel('False Positive Rate');
+ylabel('True Positive Rate');
+title(sprintf('ROC Curve (AUC = %.3f)', AUC_Test));
+grid on;
+print(['ROC_AUC_Tree'],'-dpng','-r300');  % saves as PNG
+Answer2=[precision_train,OA_train,F1_Score_train,Recall_Train,MCC_Train,AUC_Train;precision_test,OA_test,F1_Score_test,Recall_Test,MCC_Test,AUC_Test];
+end

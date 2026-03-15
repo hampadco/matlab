@@ -1,0 +1,6 @@
+%%
+Data = array2table(readtable("data.csv"));
+[I_train, I_val, I_test] = dividerand(828,0.7,0.15,0.15);
+Data_Train = Data(I_train,:);
+Data_Test = Data([I_val;I_test],:);
+Me
