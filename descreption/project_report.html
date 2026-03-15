@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>گزارش پروژه — تحلیل عدم قطعیت فازی روانگرایی</title>
+    <style>
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: ' b nazanin';
+            background: #f8f9fa;
+            color: #1a1a2e;
+            line-height: 1.8;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+            padding: 50px 45px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            color: #16213e;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 35px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e8e8e8;
+        }
+
+        h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #0f3460;
+            margin: 30px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #0f3460;
+            display: inline-block;
+        }
+
+        h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #333;
+            margin: 20px 0 10px;
+        }
+
+        p, li {
+            font-size: 0.88rem;
+            color: #333;
+        }
+
+        ul {
+            padding-right: 22px;
+            margin-bottom: 10px;
+        }
+
+        li { margin-bottom: 4px; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0 25px;
+            font-size: 0.82rem;
+        }
+
+        thead th {
+            background: #0f3460;
+            color: #fff;
+            font-weight: 500;
+            padding: 10px 8px;
+            text-align: right;
+        }
+
+        tbody td {
+            padding: 9px 8px;
+            border-bottom: 1px solid #e8e8e8;
+            vertical-align: top;
+        }
+
+        tbody tr:hover { background: #f0f4ff; }
+
+        .status {
+            display: inline-block;
+            background: #d4edda;
+            color: #155724;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.78rem;
+            font-weight: 500;
+        }
+
+        code {
+            font-family: 'Consolas', 'Courier New', monospace;
+            background: #f0f0f0;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            direction: ltr;
+            display: inline-block;
+        }
+
+        .phase-label {
+            display: inline-block;
+            background: #e8f4fd;
+            color: #0f3460;
+            padding: 3px 14px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .note-box {
+            background: #fff8e1;
+            border-right: 4px solid #f9a825;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+            font-size: 0.85rem;
+        }
+
+        .run-box {
+            background: #e8f5e9;
+            border: 1px solid #a5d6a7;
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .run-box code {
+            font-size: 1rem;
+            background: #1a1a2e;
+            color: #4fc3f7;
+            padding: 4px 16px;
+            border-radius: 6px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #999;
+            font-size: 0.75rem;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        @media print {
+            body { padding: 0; background: #fff; }
+            .container { box-shadow: none; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>گزارش پروژه — تحلیل عدم قطعیت فازی پیش‌بینی روانگرایی</h1>
+    <div class="subtitle">مبتنی بر مقاله قاسمی و درخشانی (۲۰۲۱) و Kumar و همکاران (۲۰۲۳)</div>
+
+    <!-- ===== بخش ۱ ===== -->
+    <h2>۱. خلاصه خواسته‌های استاد</h2>
+
+    <h3>الف) مدل‌سازی</h3>
+    <ul>
+        <li>جایگزینی مدل <strong>Tree</strong> (دچار Overfitting) با <strong>Random Forest</strong></li>
+        <li>مقایسه سه‌گانه: <strong>M5P (WEKA)</strong>، <strong>ANN</strong>، <strong>Random Forest</strong></li>
+        <li>اعمال شرایط شاخه‌بندی WEKA (۱۲ خوشه) روی ANN و RF</li>
+    </ul>
+
+    <h3>ب) تحلیل عدم قطعیت فازی — روش قاسمی</h3>
+    <ul>
+        <li>فازی‌سازی ورودی‌ها با مثلث فازی + آلفاکات در ۶ سطح</li>
+        <li>رسم مثلث فازی برای شاخص‌های ارزیابی (OA, Precision, Recall, F1, MCC, AUC)</li>
+        <li>مقایسه عرض مثلث بین مدل‌ها (باریک‌تر = مقاوم‌تر)</li>
+    </ul>
+
+    <h3>ج) رویکرد مقاله هندی — β و PL فازی</h3>
+    <ul>
+        <li>محاسبه CRR، CSR و FS با فرمول‌های آیین‌نامه‌ای (Idriss & Boulanger)</li>
+        <li>محاسبه شاخص قابلیت اطمینان (β) و احتمال روانگرایی (PL) با روش <strong>فازی</strong> (نه FOSM)</li>
+        <li>مقایسه PL فازی با نسبت واقعی روانگرایی در دیتاست</li>
+    </ul>
+
+    <!-- ===== بخش ۲ ===== -->
+    <h2>۲. وضعیت پیاده‌سازی</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:30px">#</th>
+                <th>خواسته</th>
+                <th style="width:60px">وضعیت</th>
+                <th>فایل پیاده‌سازی</th>
+                <th>خروجی در <code>Results/</code></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>۱</td>
+                <td>جایگزینی Tree با Random Forest</td>
+                <td><span class="status">انجام ✓</span></td>
+                <td><code>ModelRF.m</code></td>
+                <td><code>RF_results.mat</code><br><code>ROC_AUC_RF.png</code></td>
+            </tr>
+            <tr>
+                <td>۲</td>
+                <td>مقایسه ۳ مدل: M5P، ANN، RF</td>
+                <td><span class="status">انجام ✓</span></td>
+                <td><code>ModelingML_New.m</code><br><code>RunAll.m</code></td>
+                <td><code>Phase1_ModelResults.mat</code><br><code>ROC_Comparative.png</code></td>
+            </tr>
+            <tr>
+                <td>۳</td>
+                <td>اعمال شاخه‌بندی WEKA (۱۲ خوشه) روی ANN و RF</td>
+                <td><span class="status">انجام ✓</span></td>
+                <td><code>ModelAnn_New.m</code><br><code>ModelRF.m</code></td>
+                <td><code>ANN_results.mat</code><br><code>RF_results.mat</code></td>
+            </tr>
+            <tr>
+                <td>۴</td>
+                <td>فازی‌سازی ورودی‌ها + Alpha-cuts در ۶ سطح</td>
+                <td><span class="status">انجام ✓</span></td>
+                <td><code>FuzzyUncertainty.m</code></td>
+                <td><code>FuzzyUncertainty_Results.mat</code></td>
+            </tr>
+            <tr>
+                <td>۵</td>
+                <td>مثلث فازی شاخص‌های ارزیابی (OA, Precision, Recall, F1, MCC, AUC)</td>
+                <td><span class="status">انجام ✓</span></td>
+                <td><code>PlotFuzzyTriangles.m</code></td>
+                <td><code>FuzzyTriangles_Metrics.png</code></td>
+            </tr>
+            <tr>
+                <td>۶</td>
+                <td>مقایسه عرض مثلث (باریک‌تر = مقاوم‌تر)</td>
+                <td><span class="status">انجام ✓</span></td>
+                <td><code>PlotFuzzyTriangles.m</code></td>
+                <td>جدول در <code>README_RESULTS.txt</code></td>
+            </tr>
+            <tr>
+                <td>۷</td>
+                <td>رویکرد هندی: محاسبه CRR، CSR، FS</td>
+                <td><span class="status">انجام ✓</span></td>
+                <td><code>CalcCSR_CRR.m</code></td>
+                <td><code>FuzzyReliability_Results.mat</code></td>
+            </tr>
+            <tr>
+                <td>۸</td>
+                <td>محاسبه β و PL با روش فازی (نه FOSM)</td>
+                <td><span class="status">انجام ✓</span></td>
+                <td><code>FuzzyReliability.m</code></td>
+                <td><code>FuzzyReliability_Plots.png</code></td>
+            </tr>
+            <tr>
+                <td>۹</td>
+                <td>مقایسه PL فازی با نسبت واقعی روانگرایی</td>
+                <td><span class="status">انجام ✓</span></td>
+                <td><code>FuzzyReliability.m</code></td>
+                <td><code>FuzzyReliability_Plots.png</code></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ===== بخش ۳ ===== -->
+    <h2>۳. فایل‌های ایجاد شده</h2>
+
+    <span class="phase-label">فاز ۱ — مدل‌سازی</span>
+    <table>
+        <thead>
+            <tr><th>فایل</th><th>توضیح</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>ModelRF.m</code></td><td>مدل Random Forest با TreeBagger — ۱۰۰ درخت، آموزش جداگانه در هر خوشه WEKA</td></tr>
+            <tr><td><code>ModelAnn_New.m</code></td><td>مدل ANN اصلاح‌شده — رفع باگ Confusion Matrix + خوشه‌بندی WEKA</td></tr>
+            <tr><td><code>EvaluateModel.m</code></td><td>تابع مشترک محاسبه Precision، OA، F1، Recall، MCC، AUC</td></tr>
+            <tr><td><code>ModelingML_New.m</code></td><td>اسکریپت اجرای ۳ مدل + نمودار ROC مقایسه‌ای</td></tr>
+        </tbody>
+    </table>
+
+    <span class="phase-label">فاز ۲ — تحلیل عدم قطعیت فازی (روش قاسمی)</span>
+    <table>
+        <thead>
+            <tr><th>فایل</th><th>توضیح</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>FuzzyUncertainty.m</code></td><td>تحلیل فازی با ۶ سطح Alpha-cut و ۱۰۰ نمونه مونت‌کارلو — COV از مقاله هندی</td></tr>
+            <tr><td><code>PlotFuzzyTriangles.m</code></td><td>رسم ۶ نمودار مثلثی فازی — ۳ مدل روی هر نمودار</td></tr>
+        </tbody>
+    </table>
+
+    <span class="phase-label">فاز ۳ — قابلیت اطمینان فازی (رویکرد هندی)</span>
+    <table>
+        <thead>
+            <tr><th>فایل</th><th>توضیح</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>CalcCSR_CRR.m</code></td><td>فرمول‌های Idriss & Boulanger — محاسبه CSR، CRR، FS، β، PL</td></tr>
+            <tr><td><code>FuzzyReliability.m</code></td><td>فازی‌سازی β و PL با Alpha-cuts + مقایسه با نسبت واقعی روانگرایی</td></tr>
+        </tbody>
+    </table>
+
+    <span class="phase-label">اجرای نهایی</span>
+    <table>
+        <thead>
+            <tr><th>فایل</th><th>توضیح</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>RunAll.m</code></td><td>اسکریپت نهایی — اجرای تمام مراحل به ترتیب و ذخیره همه خروجی‌ها در پوشه <code>Results/</code></td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== بخش ۴ ===== -->
+    <h2>۴. خروجی‌های نهایی (پوشه <code>Results/</code>)</h2>
+
+    <table>
+        <thead>
+            <tr><th>فایل خروجی</th><th>محتوا</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>Phase1_ModelResults.mat</code></td><td>نتایج عددی سه مدل (Precision، OA، F1، Recall، MCC، AUC)</td></tr>
+            <tr><td><code>ROC_AUC_M5P.png</code></td><td>نمودار ROC مدل M5P</td></tr>
+            <tr><td><code>ROC_AUC_ANN.png</code></td><td>نمودار ROC مدل ANN</td></tr>
+            <tr><td><code>ROC_AUC_RF.png</code></td><td>نمودار ROC مدل Random Forest</td></tr>
+            <tr><td><code>ROC_Comparative.png</code></td><td>نمودار ROC مقایسه‌ای ۳ مدل روی یک نمودار</td></tr>
+            <tr><td><code>FuzzyUncertainty_Results.mat</code></td><td>نتایج عددی min/max شاخص‌ها در هر سطح α</td></tr>
+            <tr><td><code>FuzzyTriangles_Metrics.png</code></td><td>۶ نمودار مثلثی فازی (OA، Precision، Recall، F1، MCC، AUC)</td></tr>
+            <tr><td><code>FuzzyReliability_Results.mat</code></td><td>نتایج عددی β و PL فازی</td></tr>
+            <tr><td><code>FuzzyReliability_Plots.png</code></td><td>مثلث‌های فازی β، PL و FS</td></tr>
+            <tr><td><code>AllResults_Final.mat</code></td><td>ذخیره کامل Workspace</td></tr>
+            <tr><td><code>analysis_log.txt</code></td><td>لاگ کامل کنسول</td></tr>
+            <tr><td><code>README_RESULTS.txt</code></td><td>فایل توضیحات و جدول عرض مثلث‌ها</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== بخش ۵ ===== -->
+    <h2>۵. پارامترهای تحلیل</h2>
+
+    <h3>مقادیر COV (ضریب تغییرات) — از مقاله Kumar و همکاران</h3>
+    <table>
+        <thead>
+            <tr><th>پارامتر</th><th>نماد</th><th>COV</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>عمق</td><td>Z</td><td>۰ (ثابت)</td></tr>
+            <tr><td>عدد نفوذ SPT</td><td>N60</td><td>۰.۴</td></tr>
+            <tr><td>درصد ریزدانه</td><td>F</td><td>۰.۳۵</td></tr>
+            <tr><td>تنش کل</td><td>σ<sub>v</sub></td><td>۰.۲</td></tr>
+            <tr><td>تنش مؤثر</td><td>σ′<sub>v</sub></td><td>۰.۲</td></tr>
+            <tr><td>بزرگای زلزله</td><td>M<sub>w</sub></td><td>۰.۱</td></tr>
+            <tr><td>شتاب زمین</td><td>a<sub>max</sub></td><td>۰.۲</td></tr>
+        </tbody>
+    </table>
+
+    <h3>سطوح آلفاکات</h3>
+    <table>
+        <thead>
+            <tr><th>α</th><th>درصد عدم قطعیت</th><th>توضیح</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>۱.۰</td><td>۰٪</td><td>مقدار دقیق (رأس مثلث)</td></tr>
+            <tr><td>۰.۸</td><td>۲۰٪ از ΔX</td><td>عدم قطعیت کم</td></tr>
+            <tr><td>۰.۶</td><td>۴۰٪ از ΔX</td><td>عدم قطعیت متوسط-کم</td></tr>
+            <tr><td>۰.۴</td><td>۶۰٪ از ΔX</td><td>عدم قطعیت متوسط</td></tr>
+            <tr><td>۰.۲</td><td>۸۰٪ از ΔX</td><td>عدم قطعیت زیاد</td></tr>
+            <tr><td>۰.۰</td><td>۱۰۰٪ از ΔX</td><td>حداکثر عدم قطعیت (قاعده مثلث)</td></tr>
+        </tbody>
+    </table>
+
+    <div class="note-box">
+        <strong>نکته کلیدی:</strong> از آنجا که خروجی پروژه باینری (۰/۱) است، مثلث فازی مستقیماً روی خروجی رسم نمی‌شود. به جای آن، مثلث‌های فازی برای <strong>شاخص‌های ارزیابی عملکرد</strong> (که اعداد پیوسته هستند) رسم می‌شوند.
+    </div>
+
+    <!-- ===== اجرا ===== -->
+    <div class="run-box">
+        <strong>نحوه اجرا:</strong> در متلب، پوشه پروژه را باز کنید و اجرا کنید:<br><br>
+        <code>RunAll</code>
+    </div>
+
+    <div class="footer">
+        تحلیل عدم قطعیت فازی روانگرایی — MATLAB
+    </div>
+
+</div>
+
+</body>
+</html>
