@@ -4,31 +4,64 @@ function [Answer_Train,Answer_Test,Answer2,CTime] = ModelRF(Data)
 %%
 Target=Data(:,end);
 Input=Data(:,1:end-1);
-%% create data
+
+%% Assign WEKA clusters
+for i = 1:size(Data,1)
+    LM(i) = WekaM5TP_GP(Data(i,2), Data(i,3), Data(i,7), Data(i,1), Data(i,4), Data(i,5), Data(i,6));
+end
+
+%% Create data split
 NTrain=ceil(0.7*numel(Target));
 Input_Train=Input(1:NTrain,:);
 Input_Test=Input(NTrain+1:end,:);
 Target_Train=Target(1:NTrain,1);
 Target_Test=Target(NTrain+1:end,1);
-%% train Random Forest
+LM_Train = LM(1:NTrain);
+LM_Test = LM(NTrain+1:end);
+
+%% Train a separate RF for each WEKA cluster
 tic
 nTrees = 100;
-B = TreeBagger(nTrees, Input_Train, Target_Train, ...
-    'Method', 'classification', ...
-    'OOBPrediction', 'on', ...
-    'MinLeafSize', 5);
+Cluster_IDs = unique(LM);
+rf_models = cell(1, max(Cluster_IDs));
+
+for c = Cluster_IDs
+    idx_train = find(LM_Train == c);
+    if numel(idx_train) < 2 || numel(unique(Target_Train(idx_train))) < 2
+        rf_models{c} = [];
+        continue;
+    end
+    rf_models{c} = TreeBagger(nTrees, Input_Train(idx_train,:), Target_Train(idx_train), ...
+        'Method', 'classification', 'MinLeafSize', 3);
+end
 CTime = toc;
 
-[~, Score_Train_raw] = predict(B, Input_Train);
-[~, Score_Test_raw] = predict(B, Input_Test);
+%% Predict using cluster-specific RF models
+Score_Train = zeros(NTrain, 1);
+for i = 1:NTrain
+    c = LM_Train(i);
+    if ~isempty(rf_models{c})
+        [~, sc] = predict(rf_models{c}, Input_Train(i,:));
+        Score_Train(i) = sc(2);
+    else
+        Score_Train(i) = 0.5;
+    end
+end
 
-Score_Train = Score_Train_raw(:,2);
-Score_Test = Score_Test_raw(:,2);
+nTest = size(Input_Test,1);
+Score_Test = zeros(nTest, 1);
+for i = 1:nTest
+    c = LM_Test(i);
+    if ~isempty(rf_models{c})
+        [~, sc] = predict(rf_models{c}, Input_Test(i,:));
+        Score_Test(i) = sc(2);
+    else
+        Score_Test(i) = 0.5;
+    end
+end
 
-Y_Train = zeros(size(Score_Train));
-Y_Train(Score_Train>=0.5) = 1;
-Y_test = zeros(size(Score_Test));
-Y_test(Score_Test>=0.5) = 1;
+Y_Train = double(Score_Train >= 0.5);
+Y_test = double(Score_Test >= 0.5);
 
 %% Evaluate Train
 [confMat, ~] = confusionmat(Target_Train, Y_Train);
